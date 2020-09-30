@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mule-azure-vault-manager="http://www.mulesoft.org/schema/mule/mule-azure-vault-manager" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/mule-azure-vault-manager http://www.mulesoft.org/schema/mule/mule-azure-vault-manager/current/mule-mule-azure-vault-manager.xsd">
+	<flow name="usingCommonFlowFlow" doc:id="c8bcc58c-0014-4c68-9080-5ec3859453b6" >
+		<http:listener doc:name="Listener" doc:id="f59cf940-202d-45c6-9bf6-ab54a0876499" config-ref="HTTP_Listener_config" path="/retrieveUsingCommon"/>
+		<flow-ref doc:name="callCommonFlow" doc:id="7a49cc9d-7306-4506-8c02-40e261f80fe2" name="usingCommonFlowFlow-SystemAPIExample"/>
+		<ee:transform doc:name="Transform Message" doc:id="ed890fd0-c1fc-4bd4-9029-682b446a4183" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.secretKeyFromAzure]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="usingCommonFlowFlow-SystemAPIExample" doc:id="dc26620c-bc39-4912-a527-c574ed6ae6c4" >
+		<mule-azure-vault-manager:get-all-secrets doc:name="Get All Key Value from Vault" doc:id="66dc040a-2e18-40de-8958-bd9dd755e453" config-ref="Mule_Azure_Vault_Manager_Config1" vaultName="${vaultname}"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="2c957676-42e6-445b-9850-c30632ff745b" variableName="secretKeyFromAzure"/>
+	</flow>
+</mule>

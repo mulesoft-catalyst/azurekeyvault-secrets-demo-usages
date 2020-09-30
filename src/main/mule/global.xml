@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:mule-azure-vault-manager="http://www.mulesoft.org/schema/mule/mule-azure-vault-manager"
+	xmlns:azure-vault-property-provider="http://www.mulesoft.org/schema/mule/azure-vault-property-provider" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mulesoft.org/schema/mule/azure-vault-property-provider/current/mule-azure-vault-property-provider.xsd
+http://www.mulesoft.org/schema/mule/mule-azure-vault-manager http://www.mulesoft.org/schema/mule/mule-azure-vault-manager/current/mule-mule-azure-vault-manager.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<mule-azure-vault-manager:config name="Mule_Azure_Vault_Manager_Config1" doc:name="Mule Azure Vault Manager Config" doc:id="56497a7a-37c8-48a3-b58b-d171cebed947" azureApplicationClientId="${client_id}" azureApplicationSecretKey="${client_secret}" />
+	<global-property doc:name="Global Property" doc:id="e273c8eb-a602-46bb-8b39-316e2911847f" name="env" value="dev" />
+	<configuration-properties doc:name="Configuration properties" doc:id="dcb0eef9-b896-44e5-a56b-54a043040fa7" file="${env}-azurekeyvaultdemo.properties" />
+	<global-property doc:name="Global Property" doc:id="0ae87b38-447f-4fc2-9780-4a220761504e" name="client_id" value="...." />
+	<global-property doc:name="Global Property" doc:id="5ee03a2c-74e5-42d0-9dd3-1d5b4d66fcda" name="client_secret" value="...." />
+	<azure-vault-property-provider:config name="Azure_Vault_Property_Provider_Config" doc:name="Azure Vault Property Provider Config" doc:id="a52331ed-266e-4a57-9fa7-d5f84b0c2697" >
+		<azure-vault-property-provider:azure-vault applicationClientId="${client_id}" applicationSecretKey="${client_secret}" azureVaultName="${vaultname}" />
+	</azure-vault-property-provider:config>
+	<global-property doc:name="Global Property" doc:id="d7999e44-d52b-459e-8ac9-8788fa0708c4" name="vaultname" value="..." />
+	<db:config name="MYSQLDatabase-azureDemo" doc:name="Database Config" doc:id="29ef8695-e477-4849-9e44-2bce6d0b7463" >
+		<db:my-sql-connection host="${azure-vault::dev-muleMeetupAPPDemo-appDB-connectionString}" port="3306" user="${azure-vault::dev-muleMeetupAPPDemo-appDB-userid}" password="${azure-vault::dev-muleMeetupAPPDemo-appDB-password}" />
+	</db:config>
+
+
+</mule>
