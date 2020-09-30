@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="DEMO4-databaseSelectWithAzureCredsFlow" doc:id="bdc8bbb2-ded8-412e-91e5-117c53c5bfd4" >
+		<http:listener doc:name="Listener" doc:id="c4c08b18-3082-4ca3-8a04-8de448f3e46a" config-ref="HTTP_Listener_config" path="/retrieveDatabaseRecords"/>
+		<db:select doc:name="Select" doc:id="8917dcc1-378c-47be-97ca-c8fe1baa2c8c" config-ref="MYSQLDatabase-azureDemo">
+			<db:sql >select * from innodb.muleMeetups_azureKeyVault</db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="9ad84f48-5d85-4adc-82ff-f8fae0f9b095" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

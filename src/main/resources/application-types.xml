@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="allSecretsExample" format="json">
+      <types:shape format="weave" example="examples/allSecretsRestCallOutput.json"><![CDATA[%dw 2.0
+
+type allSecretsExample = {|
+  value: Array<{|    id: String,     attributes: {|      enabled: Boolean,       created: Number {"typeId": "int"},       updated: Number {"typeId": "int"},       recoveryLevel: String    |}  |}>, 
+  nextLink: Null
+|} {"example": "{\\\"value\\\":[{\\\"id\\\":\\\"https:\\/\\/mulemeetup-demo-keyvault.vault.azure.net\\/secrets\\/dev-muleMeetupAPPDemo-appDB-password\\\",\\\"attributes\\\":{\\\"enabled\\\":true,\\\"created\\\":1586615294,\\\"updated\\\":1586615294,\\\"recoveryLevel\\\":\\\"Recoverable+Purgeable\\\"}},{\\\"id\\\":\\\"https:\\/\\/mulemeetup-demo-keyvault.vault.azure.net\\/secrets\\/dev-muleMeetupAPPDemo-appDB-userid\\\",\\\"attributes\\\":{\\\"enabled\\\":true,\\\"created\\\":1586615263,\\\"updated\\\":1586615263,\\\"recoveryLevel\\\":\\\"Recoverable+Purgeable\\\"}}],\\\"nextLink\\\":null}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="keyValueOutput" format="json">
+      <types:shape format="weave" example="examples/keyValuePairsOutput.json"><![CDATA[%dw 2.0
+
+type keyValueOutput = Array<{|  key: String,   value: String|}> {"example": "[{\\\"key\\\":\\\"dev-db-userID\\\",\\\"value\\\":\\\"123\\\"},{\\\"key\\\":\\\"dev-db-userPassword\\\",\\\"value\\\":\\\"XYZ\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#33bce49b-bf46-4083-a3e1-f4d140910342">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="allSecretsExample"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#d673e524-dd26-4cd0-9354-527325e68dfe">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="keyvaluepairs" type="keyValueOutput"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

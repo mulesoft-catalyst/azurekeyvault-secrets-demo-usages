@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:mule-azure-vault-manager="http://www.mulesoft.org/schema/mule/mule-azure-vault-manager"
+	xmlns:azure-vault-property-provider="http://www.mulesoft.org/schema/mule/azure-vault-property-provider"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/azure-vault-property-provider http://www.mulesoft.org/schema/mule/azure-vault-property-provider/current/mule-azure-vault-property-provider.xsd
+http://www.mulesoft.org/schema/mule/mule-azure-vault-manager http://www.mulesoft.org/schema/mule/mule-azure-vault-manager/current/mule-mule-azure-vault-manager.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="azurekeyvault-secrets-demoFlow" doc:id="80dcb9c1-8dbc-4aa3-b47f-4e0578581653" >
+		<scheduler doc:name="Scheduler" doc:id="f23144e3-a713-4442-8f98-cba41fce54f3" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="DAYS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger" doc:id="1033a907-3278-4817-af27-b0b9625f19e0" message="${azure-vault::dev-muleMeetupAPPDemo-appDB-userid}"/>
+		<mule-azure-vault-manager:get-secret doc:name="Get Single Key from vault" doc:id="d991e831-5641-4e70-b51a-a71b450366c6" config-ref="Mule_Azure_Vault_Manager_Config1" vaultName="${vaultname}" key="dev-muleMeetupAPPDemo-appDB-userid"/>
+		<ee:transform doc:name="keyValue" doc:id="f1eed7c2-6d7d-424c-a54c-5f21986cdc4a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a7190fc4-9a3b-425e-8955-ee8b4ceca205" message="#[&quot;-------- Key Value is ======&gt;&gt;  &quot;++ (payload default '')]"/>
+		<mule-azure-vault-manager:get-all-secrets doc:name="Get All Key Value from Vault" doc:id="e3298f4a-a1d0-4a3b-9431-3775d10cb409" config-ref="Mule_Azure_Vault_Manager_Config1" vaultName="${vaultname}"/>
+		<set-variable value="#[payload]" doc:name="setKeyValuePairs" doc:id="1124bdca-1d19-4f2f-b7be-2a9e4121b7d8" variableName="keyValues-azure"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ca792dea-cccf-4ff6-8e78-3159edb2e8b7" message="#[sizeOf(payload)]"/>
+	</flow>
+</mule>
